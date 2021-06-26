@@ -28,6 +28,3 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
     }]
   }
 }
-/*
-{"error":{"code":"InvalidTemplate","message":"Deployment template validation failed: 'The template resource '[parameters('rulesList')[copyIndex()].asgname]' at line '1' and column '1834' is not valid: The language expression property 'asgname' doesn't exist, available properties are 'name, priority, description, direction, access, protocol, sourceAddressPrefixes, sourcePortRange, destinationPortRange'.. Please see https://aka.ms/arm-template-expressions for usage details.'.","additionalInfo":[{"type":"TemplateViolation","info":{"lineNumber":1,"linePosition":1834,"path":"properties.template.resources[0]"}}]}}
-*/
