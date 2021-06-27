@@ -11,6 +11,8 @@ param spSku string
 param spVersion string
 param vmSize string
 param bdStorageAccountName string
+param autoShutdown string
+param autoShutdownTime string
 
 @secure()
 param admin_username string
@@ -24,7 +26,7 @@ var ipconfigName = 'ipconfig-${vmName}'
 var osdiskName = 'osdisk-${vmName}'
 var sshKeyPath = '/home/${admin_username}/.ssh/authorized_keys'
 var env = environment()
-var bdStorageAccountUri = 'https://${bdStorageAccountName}.${env.suffixes.storage}'
+var bdStorageAccountUri = 'https://${bdStorageAccountName}.blob.${env.suffixes.storage}'
 
 /* Create Public IP */
 
@@ -129,6 +131,25 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
       }
     }
   }
+}
+
+/* Configure automatic shutdown */
+
+resource autoshutdown 'Microsoft.DevTestLab/schedules@2018-09-15' = {
+  name: 'shutdown-computevm-${vmName}'
+  location: location
+  properties: {
+    status: autoShutdown
+    taskType: 'ComputeVmShutdownTask'
+    dailyRecurrence: {
+      time: autoShutdownTime
+    }
+    timeZoneId: 'GMT Standard Time'
+    targetResourceId: resourceId('Microsoft.Compute/virtualMachines', vmName)
+  }
+  dependsOn: [
+    vm
+  ]
 }
 
 /* to do:

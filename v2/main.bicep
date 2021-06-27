@@ -105,6 +105,8 @@ var linuxVMList = [
     asglist: [
       'asg-ssh-inbound'
     ]
+    autoShutdown: 'Enabled'
+    autoShutdownTime: '2100'
   }
 ]
 
@@ -212,6 +214,8 @@ module linuxvm 'vm-linux.bicep' = [for item in linuxVMList: {
     admin_username: keyVault.getSecret('username1')
     ssh_key: keyVault.getSecret('mac-ssh-key')
     bdStorageAccountName: bdStorageAccountName
+    autoShutdown: item.autoShutdown
+    autoShutdownTime: item.autoShutdownTime
   }
   dependsOn: [
     asg
