@@ -211,6 +211,7 @@ module linuxvm 'vm-linux.bicep' = [for item in linuxVMList: {
     spVersion: item.spVersion
     admin_username: keyVault.getSecret('username1')
     ssh_key: keyVault.getSecret('mac-ssh-key')
+    bdStorageAccountName: bdStorageAccountName
   }
   dependsOn: [
     asg

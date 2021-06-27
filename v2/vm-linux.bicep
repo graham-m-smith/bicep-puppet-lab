@@ -10,6 +10,7 @@ param spOffer string
 param spSku string
 param spVersion string
 param vmSize string
+param bdStorageAccountName string
 
 @secure()
 param admin_username string
@@ -22,6 +23,8 @@ var nicName = 'nic-${vmName}'
 var ipconfigName = 'ipconfig-${vmName}'
 var osdiskName = 'osdisk-${vmName}'
 var sshKeyPath = '/home/${admin_username}/.ssh/authorized_keys'
+var env = environment()
+var bdStorageAccountUri = 'https://${bdStorageAccountName}.${env.suffixes.storage}'
 
 /* Create Public IP */
 
@@ -119,9 +122,16 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
         }
       ]
     }
+    diagnosticsProfile: {
+      bootDiagnostics: {
+        enabled: true
+        storageUri: bdStorageAccountUri
+      }
+    }
   }
 }
 
-/* to do
-bootdiags
+/* to do:
+- auto shutdown schedule
+- provisioning script
 */
