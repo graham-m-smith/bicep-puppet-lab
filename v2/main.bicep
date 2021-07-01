@@ -129,12 +129,39 @@ var linuxVMList = [
       }
     ]
   }
+  {
+    vmname: 'puppetclient2'
+    vmSize: 'Standard_DS2_v2'
+    spPublisher: 'OpenLogic'
+    spOffer: 'CentOS'
+    spSku: '7.6'
+    spVersion: 'latest'
+    privateIpAddress: '10.128.2.30'
+    asglist: [
+      'asg-ssh-inbound'
+    ]
+    autoShutdown: 'Enabled'
+    autoShutdownTime: '2100'
+    manageddisks: [
+      {
+        diskname: 'disk1'
+        lun: 2
+      }
+    ]
+  }
 ]
 
 /* Managed Disks */
 var vmManagedDisks = [
   {
     vmname: 'puppetclient1'
+    diskname: 'disk1'
+    skuName: 'Standard_LRS'
+    createOption: 'Empty'
+    diskSize: 20
+  }
+  {
+    vmname: 'puppetclient2'
     diskname: 'disk1'
     skuName: 'Standard_LRS'
     createOption: 'Empty'
