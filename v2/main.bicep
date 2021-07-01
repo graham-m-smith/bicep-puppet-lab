@@ -107,6 +107,38 @@ var linuxVMList = [
     ]
     autoShutdown: 'Enabled'
     autoShutdownTime: '2100'
+    manageddisks: []
+  }
+  {
+    vmname: 'puppetclient1'
+    vmSize: 'Standard_DS2_v2'
+    spPublisher: 'OpenLogic'
+    spOffer: 'CentOS'
+    spSku: '7.6'
+    spVersion: 'latest'
+    privateIpAddress: '10.128.2.20'
+    asglist: [
+      'asg-ssh-inbound'
+    ]
+    autoShutdown: 'Enabled'
+    autoShutdownTime: '2100'
+    manageddisks: [
+      {
+        diskname: 'disk1'
+        lun: 2
+      }
+    ]
+  }
+]
+
+/* Managed Disks */
+var vmManagedDisks = [
+  {
+    vmname: 'puppetclient1'
+    diskname: 'disk1'
+    skuName: 'Standard_LRS'
+    createOption: 'Empty'
+    diskSize: 20
   }
 ]
 
@@ -195,6 +227,20 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-04-01-preview' existing = {
   scope: resourceGroup(keyvaultRgName)
 }
 
+/* Create Managed Disks */
+
+module manageddisks 'manageddisk.bicep' = [for item in vmManagedDisks: {
+  name: 'deploy-${item.vmname}-${item.diskname}'
+  params: {
+    location: location
+    vmname: item.vmname
+    diskname: item.diskname
+    createOption: item.createOption
+    skuName: item.skuName
+    diskSize: item.diskSize
+  }
+}]
+
 /* Deploy Linux Virtual Machines - Public Ip, NIC & VM */
 
 module linuxvm 'vm-linux.bicep' = [for item in linuxVMList: {
@@ -216,12 +262,13 @@ module linuxvm 'vm-linux.bicep' = [for item in linuxVMList: {
     bdStorageAccountName: bdStorageAccountName
     autoShutdown: item.autoShutdown
     autoShutdownTime: item.autoShutdownTime
+    manageddisks: item.manageddisks
   }
   dependsOn: [
     asg
     nsg
     vnet
-    privatedns
     bd
+    manageddisks
   ]
 }]

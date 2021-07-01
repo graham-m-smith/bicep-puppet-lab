@@ -13,6 +13,7 @@ param vmSize string
 param bdStorageAccountName string
 param autoShutdown string
 param autoShutdownTime string
+param manageddisks array
 
 @secure()
 param admin_username string
@@ -93,6 +94,16 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
         caching: 'ReadWrite'
         writeAcceleratorEnabled: false
       }
+      dataDisks: [for item in manageddisks: {
+        name: 'md-${vmName}-${item.diskname}'
+        managedDisk: {
+          id: resourceId('Microsoft.Compute/disks', 'md-${vmName}-${item.diskname}')
+        }
+        lun: item.lun
+        createOption: 'Attach'
+        caching: 'ReadWrite'
+        
+      }]
     }
     osProfile: {
       computerName: vmName
@@ -153,6 +164,6 @@ resource autoshutdown 'Microsoft.DevTestLab/schedules@2018-09-15' = {
 }
 
 /* to do:
-- auto shutdown schedule
+- backup to vault
 - provisioning script
 */
