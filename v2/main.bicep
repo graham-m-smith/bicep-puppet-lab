@@ -185,13 +185,14 @@ var vmManagedDisks = [
   }
 ]
 
+/* Virtual Machine Backups - which machine to what vault/policy */
 var vmBackups = [
   {
     vmname: 'puppetclient3'
-    vmrg: resourceGroup().name
-    backupvaultname: 'rsv-vault1'
-    backupvaultrg: 'rg-rsv'
-    backuppolicy: 'Daily'
+    vmRG: resourceGroup().name
+    backupVaultName: 'rsv-vault1'
+    backupVaultRG: 'rg-rsv'
+    backupPolicy: 'Daily'
   }
 ]
 
@@ -329,14 +330,14 @@ module linuxvm 'vm-linux.bicep' = [for item in linuxVMList: {
 /* Add VMs to Backup Vault / Backup Policy */
 
 module vmbackup 'vm-backup.bicep' = [for item in vmBackups: {
-  name: 'deployVMBackup-${item.backupvaultname}-${item.backuppolicy}-${item.vmname}'
-  scope: resourceGroup(item.backupvaultrg)
+  name: 'deployVMBackup-${item.backupVaultName}-${item.backupPolicy}-${item.vmname}'
+  scope: resourceGroup(item.backupVaultRG)
   params: {
     vmName: item.vmname
-    vmResourceGroup: item.vmrg
-    backupVaultName: item.backupvaultname
-    rsvResourceGroup: item.backupvaultrg
-    backupPolicyName: item.backuppolicy
+    vmResourceGroup: item.vmRG
+    backupVaultName: item.backupVaultName
+    rsvResourceGroup: item.backupVaultRG
+    backupPolicyName: item.backupPolicy
     location: location
   }
   dependsOn: [
