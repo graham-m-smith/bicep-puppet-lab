@@ -149,6 +149,22 @@ var linuxVMList = [
       }
     ]
   }
+  {
+    vmname: 'puppetclient3'
+    vmSize: 'Standard_DS2_v2'
+    spPublisher: 'OpenLogic'
+    spOffer: 'CentOS'
+    spSku: '7.6'
+    spVersion: 'latest'
+    privateIpAddress: '10.128.2.40'
+    asglist: [
+      'asg-ssh-inbound'
+    ]
+    autoShutdown: 'Enabled'
+    autoShutdownTime: '2100'
+    manageddisks: [
+    ]
+  }
 ]
 
 /* Managed Disks */
@@ -166,6 +182,16 @@ var vmManagedDisks = [
     skuName: 'Standard_LRS'
     createOption: 'Empty'
     diskSize: 20
+  }
+]
+
+var vmBackups = [
+  {
+    vmname: 'puppetclient3'
+    vmrg: resourceGroup().name
+    backupvaultname: 'rsv-vault1'
+    backupvaultrg: 'rg-rsv'
+    backuppolicy: 'Daily'
   }
 ]
 
@@ -297,5 +323,23 @@ module linuxvm 'vm-linux.bicep' = [for item in linuxVMList: {
     vnet
     bd
     manageddisks
+  ]
+}]
+
+/* Add VMs to Backup Vault / Backup Policy */
+
+module vmbackup 'vm-backup.bicep' = [for item in vmBackups: {
+  name: 'deployVMBackup-${item.backupvaultname}-${item.backuppolicy}-${item.vmname}'
+  scope: resourceGroup(item.backupvaultrg)
+  params: {
+    vmName: item.vmname
+    vmResourceGroup: item.vmrg
+    backupVaultName: item.backupvaultname
+    rsvResourceGroup: item.backupvaultrg
+    backupPolicyName: item.backuppolicy
+    location: location
+  }
+  dependsOn: [
+    linuxvm
   ]
 }]

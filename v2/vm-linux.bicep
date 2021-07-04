@@ -164,6 +164,5 @@ resource autoshutdown 'Microsoft.DevTestLab/schedules@2018-09-15' = {
 }
 
 /* to do:
-- backup to vault
 - provisioning script
 */
