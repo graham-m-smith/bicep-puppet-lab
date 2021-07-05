@@ -108,6 +108,8 @@ var linuxVMList = [
     autoShutdown: 'Enabled'
     autoShutdownTime: '2100'
     manageddisks: []
+    applyScriptExtension: false
+    scriptExtensionData: []
   }
   {
     vmname: 'puppetclient1'
@@ -128,6 +130,8 @@ var linuxVMList = [
         lun: 2
       }
     ]
+    applyScriptExtension: false
+    scriptExtensionData: []
   }
   {
     vmname: 'puppetclient2'
@@ -148,6 +152,8 @@ var linuxVMList = [
         lun: 2
       }
     ]
+    applyScriptExtension: false
+    scriptExtensionData: []
   }
   {
     vmname: 'puppetclient3'
@@ -162,10 +168,48 @@ var linuxVMList = [
     ]
     autoShutdown: 'Enabled'
     autoShutdownTime: '2100'
-    manageddisks: [
+    manageddisks: []
+    applyScriptExtension: false
+    scriptExtensionData: []
+  }
+  {
+    vmname: 'puppetclient4'
+    vmSize: 'Standard_B2s'
+    spPublisher: 'OpenLogic'
+    spOffer: 'CentOS-LVM'
+    spSku: '7-lvm-gen2'
+    spVersion: 'latest'
+    privateIpAddress: '10.128.2.50'
+    asglist: [
+      'asg-ssh-inbound'
+    ]
+    autoShutdown: 'Enabled'
+    autoShutdownTime: '2100'
+    manageddisks: []
+    applyScriptExtension: true
+    scriptExtensionData: [
+      {
+        fileUri: 'uri'
+        commandToExecute: 'command'
+        scriptExtensionRG: 'rg-deploy'
+        scriptExtensionSA: 'gmsdeploy'
+        scriptExtensionContainer: 'scripts'
+        scriptBlobName: 'deploy-puppet-client.sh'
+      }
     ]
   }
 ]
+
+/*
+vmsize: Standard_B2s
+
+Publisher: OpenLogic
+Offer: CentOS-LVM
+Sku: 7-lvm-gen2
+Version: latest
+
+*/
+
 
 /* Managed Disks */
 var vmManagedDisks = [
@@ -317,6 +361,8 @@ module linuxvm 'vm-linux.bicep' = [for item in linuxVMList: {
     autoShutdown: item.autoShutdown
     autoShutdownTime: item.autoShutdownTime
     manageddisks: item.manageddisks
+    applyScriptExtension: item.applyScriptExtension
+    scriptExtensionData: item.scriptExtensionData
   }
   dependsOn: [
     asg

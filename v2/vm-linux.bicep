@@ -14,6 +14,8 @@ param bdStorageAccountName string
 param autoShutdown string
 param autoShutdownTime string
 param manageddisks array
+param applyScriptExtension bool
+param scriptExtensionData object
 
 @secure()
 param admin_username string
@@ -161,6 +163,25 @@ resource autoshutdown 'Microsoft.DevTestLab/schedules@2018-09-15' = {
   dependsOn: [
     vm
   ]
+}
+
+/* Add custom script extension */
+
+resource customscript 'Microsoft.Compute/virtualMachines/extensions@2021-03-01' = if (applyScriptExtension) {
+  name: '${vmName}/configure-puppet-client'
+  location: location
+  properties: {
+    publisher: 'Microsoft.Azure.Extensions'
+    type: 'CustomScript'
+    typeHandlerVersion: '2.0'
+    autoUpgradeMinorVersion: true
+    settings: {
+      fileUris: [
+        scriptExtensionData.fileUri
+      ]
+      'commandToExecute': ''
+    }
+  }
 }
 
 /* to do:
