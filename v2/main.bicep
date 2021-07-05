@@ -109,7 +109,8 @@ var linuxVMList = [
     autoShutdownTime: '2100'
     manageddisks: []
     applyScriptExtension: false
-    scriptExtensionData: []
+    fileUri: ''
+    commandToExecute: ''
   }
   {
     vmname: 'puppetclient1'
@@ -131,7 +132,8 @@ var linuxVMList = [
       }
     ]
     applyScriptExtension: false
-    scriptExtensionData: []
+    fileUri: ''
+    commandToExecute: ''
   }
   {
     vmname: 'puppetclient2'
@@ -153,7 +155,8 @@ var linuxVMList = [
       }
     ]
     applyScriptExtension: false
-    scriptExtensionData: []
+    fileUri: ''
+    commandToExecute: ''
   }
   {
     vmname: 'puppetclient3'
@@ -170,7 +173,8 @@ var linuxVMList = [
     autoShutdownTime: '2100'
     manageddisks: []
     applyScriptExtension: false
-    scriptExtensionData: []
+    fileUri: ''
+    commandToExecute: ''
   }
   {
     vmname: 'puppetclient4'
@@ -187,16 +191,8 @@ var linuxVMList = [
     autoShutdownTime: '2100'
     manageddisks: []
     applyScriptExtension: true
-    scriptExtensionData: [
-      {
-        fileUri: 'uri'
-        commandToExecute: 'command'
-        scriptExtensionRG: 'rg-deploy'
-        scriptExtensionSA: 'gmsdeploy'
-        scriptExtensionContainer: 'scripts'
-        scriptBlobName: 'deploy-puppet-client.sh'
-      }
-    ]
+    fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-client.sh'
+    commandToExecute: 'sh deploy-puppet-client.sh'
   }
 ]
 
@@ -362,7 +358,8 @@ module linuxvm 'vm-linux.bicep' = [for item in linuxVMList: {
     autoShutdownTime: item.autoShutdownTime
     manageddisks: item.manageddisks
     applyScriptExtension: item.applyScriptExtension
-    scriptExtensionData: item.scriptExtensionData
+    fileUri: item.fileUri
+    commandToExecute: item.commandToExecute
   }
   dependsOn: [
     asg

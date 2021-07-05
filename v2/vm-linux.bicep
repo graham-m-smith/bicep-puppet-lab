@@ -15,7 +15,8 @@ param autoShutdown string
 param autoShutdownTime string
 param manageddisks array
 param applyScriptExtension bool
-param scriptExtensionData object
+param fileUri string
+param commandToExecute string
 
 @secure()
 param admin_username string
@@ -177,11 +178,14 @@ resource customscript 'Microsoft.Compute/virtualMachines/extensions@2021-03-01' 
     autoUpgradeMinorVersion: true
     settings: {
       fileUris: [
-        scriptExtensionData.fileUri
+        fileUri
       ]
-      'commandToExecute': ''
+      commandToExecute: commandToExecute
     }
   }
+  dependsOn: [
+    vm
+  ]
 }
 
 /* to do:
