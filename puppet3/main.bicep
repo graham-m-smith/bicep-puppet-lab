@@ -63,7 +63,7 @@ var dnsCNAMEList = [
   {
     dnszone: dnsZoneName
     cname: 'puppet'
-    target: 'puppetserver.${dnsZoneName}'
+    target: 'puppet3server.${dnsZoneName}'
     ttl: 5
   }
 ]
@@ -71,7 +71,7 @@ var dnsCNAMEList = [
 /* Define array containing list of Linux Virtual machines to be created */
 var linuxVMList = [
   {
-    vmname: 'puppetserver'
+    vmname: 'puppet3server'
     vmSize: 'Standard_B2s'
     spPublisher: 'OpenLogic'
     spOffer: 'CentOS-LVM'
@@ -90,7 +90,7 @@ var linuxVMList = [
     commandToExecute: 'sh deploy-puppet-server.sh'
   }
   {
-    vmname: 'puppetclient1'
+    vmname: 'puppet3client1'
     vmSize: 'Standard_B2s'
     spPublisher: 'OpenLogic'
     spOffer: 'CentOS-LVM'
@@ -113,7 +113,7 @@ var linuxVMList = [
 /* Managed Disks */
 var vmManagedDisks = [
   {
-    vmname: 'puppetclient1'
+    vmname: 'puppet3client1'
     diskname: 'disk1'
     skuName: 'Standard_LRS'
     createOption: 'Empty'
