@@ -72,7 +72,7 @@ var dnsCNAMEList = [
 var linuxVMList = [
   {
     vmname: 'puppet3server'
-    vmSize: 'Standard_B2s'
+    vmSize: 'Standard_DS2_v2'
     spPublisher: 'OpenLogic'
     spOffer: 'CentOS-LVM'
     spSku: '7-lvm-gen2'
