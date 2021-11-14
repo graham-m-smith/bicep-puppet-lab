@@ -72,7 +72,7 @@ var dnsCNAMEList = [
 var linuxVMList = [
   {
     vmname: 'puppet3server'
-    vmSize: 'Standard_DS2_v2#'
+    vmSize: 'Standard_DS2_v2'
     spPublisher: 'OpenLogic'
     spOffer: 'CentOS-LVM'
     spSku: '7-lvm-gen2'
@@ -108,12 +108,38 @@ var linuxVMList = [
     fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-client.sh'
     commandToExecute: 'sh deploy-puppet-client.sh'
   }
+  {
+    vmname: 'puppet3client2'
+    vmSize: 'Standard_B2s'
+    spPublisher: 'OpenLogic'
+    spOffer: 'CentOS-LVM'
+    spSku: '7-lvm-gen2'
+    spVersion: 'latest'
+    privateIpAddress: '10.128.2.30'
+    asglist: [
+      'asg-ssh-inbound'
+    ]
+    autoShutdown: 'Enabled'
+    autoShutdownTime: '2100'
+    manageddisks: []
+    applyScriptExtension: true
+    extensionScriptName: 'configure-puppet-client'
+    fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-client.sh'
+    commandToExecute: 'sh deploy-puppet-client.sh'
+  }
 ]
 
 /* Managed Disks */
 var vmManagedDisks = [
   {
     vmname: 'puppet3client1'
+    diskname: 'disk1'
+    skuName: 'Standard_LRS'
+    createOption: 'Empty'
+    diskSize: 20
+  }
+  {
+    vmname: 'puppet3client2'
     diskname: 'disk1'
     skuName: 'Standard_LRS'
     createOption: 'Empty'
