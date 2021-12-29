@@ -19,6 +19,7 @@ param extensionScriptName string
 param fileUri string
 param commandToExecute string
 param tagValues object
+param identityType string
 
 @secure()
 param admin_username string
@@ -84,6 +85,9 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
   name: vmName
   location: location
   tags: tagValues
+  identity: {
+    type: identityType
+  }
   properties: {
     hardwareProfile: {
       vmSize: vmSize
@@ -151,6 +155,8 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
     }
   }
 }
+
+output principalId string = vm.identity.principalId
 
 /* Configure automatic shutdown */
 

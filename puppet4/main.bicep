@@ -88,6 +88,7 @@ var linuxVMList = [
     extensionScriptName: 'configure-puppet-server'
     fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-server.sh'
     commandToExecute: 'sh deploy-puppet-server.sh'
+    identityType: 'SystemAssigned'
   }
   {
     vmname: 'puppet4client1'
@@ -107,6 +108,7 @@ var linuxVMList = [
     extensionScriptName: 'configure-puppet-client'
     fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-client.sh'
     commandToExecute: 'sh deploy-puppet-client.sh'
+    identityType: 'SystemAssigned'
   }
   {
     vmname: 'puppet4client2'
@@ -126,6 +128,7 @@ var linuxVMList = [
     extensionScriptName: 'configure-puppet-client'
     fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-client.sh'
     commandToExecute: 'sh deploy-puppet-client.sh'
+    identityType: 'SystemAssigned'
   }
 ]
 
@@ -268,6 +271,7 @@ module linuxvm '../modules/vm-linux.bicep' = [for item in linuxVMList: {
     fileUri: item.fileUri
     commandToExecute: item.commandToExecute
     tagValues: tagValues
+    identityType: item.identityType
   }
   dependsOn: [
     asg
@@ -277,3 +281,23 @@ module linuxvm '../modules/vm-linux.bicep' = [for item in linuxVMList: {
     manageddisks
   ]
 }]
+
+var keyVaultPermissions = {
+  secrets: [ 
+    'get'
+  ]
+}
+
+module keyVaultAccess '../modules/keyvaultpolicy.bicep' = {
+  scope: resourceGroup('gms-key-vault-rg')
+  dependsOn: [
+    linuxvm
+  ]
+  name: 'KeyVaultAccess'
+  params: {
+    keyVaultName: 'keyvault-gms'
+    principalId: linuxvm[0].outputs.principalId
+    keyVaultPermissions: keyVaultPermissions
+    policyAction: 'add'
+  }
+}
