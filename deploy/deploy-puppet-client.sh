@@ -30,6 +30,6 @@ AUTH_KEY=$(/bin/curl -s $URI -H "$HEADER" | /bin/python -c "import sys, json; pr
 
 /bin/cat >> /etc/puppetlabs/puppet/puppet.conf << EOF
 server = puppet.gmslab.local
-certname = ${HOSTNAME}
+certname = ${HOSTNAME}.gmslab.local
 environment = production
 EOF
