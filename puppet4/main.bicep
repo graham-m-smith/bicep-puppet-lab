@@ -88,6 +88,7 @@ var linuxVMList = [
     extensionScriptName: 'configure-puppet-server'
     fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-server.sh'
     commandToExecute: 'sh deploy-puppet-server.sh'
+    grantKeyVaultAccess: true
     identityType: 'SystemAssigned'
   }
   {
@@ -108,6 +109,7 @@ var linuxVMList = [
     extensionScriptName: 'configure-puppet-client'
     fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-client.sh'
     commandToExecute: 'sh deploy-puppet-client.sh'
+    grantKeyVaultAccess: false
     identityType: 'SystemAssigned'
   }
   {
@@ -128,6 +130,7 @@ var linuxVMList = [
     extensionScriptName: 'configure-puppet-client'
     fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-client.sh'
     commandToExecute: 'sh deploy-puppet-client.sh'
+    grantKeyVaultAccess: false
     identityType: 'SystemAssigned'
   }
 ]
@@ -272,6 +275,7 @@ module linuxvm '../modules/vm-linux.bicep' = [for item in linuxVMList: {
     commandToExecute: item.commandToExecute
     tagValues: tagValues
     identityType: item.identityType
+    grantKeyVaultAccess: item.grantKeyVaultAccess
   }
   dependsOn: [
     asg
@@ -282,6 +286,7 @@ module linuxvm '../modules/vm-linux.bicep' = [for item in linuxVMList: {
   ]
 }]
 
+/*
 var keyVaultPermissions = {
   secrets: [ 
     'get'
@@ -301,3 +306,4 @@ module keyVaultAccess '../modules/keyvaultpolicy.bicep' = {
     policyAction: 'add'
   }
 }
+*/

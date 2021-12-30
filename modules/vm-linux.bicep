@@ -20,6 +20,8 @@ param fileUri string
 param commandToExecute string
 param tagValues object
 param identityType string
+param grantKeyVaultAccess bool
+
 
 @secure()
 param admin_username string
@@ -178,6 +180,27 @@ resource autoshutdown 'Microsoft.DevTestLab/schedules@2018-09-15' = {
   ]
 }
 
+var keyVaultPermissions = {
+  secrets: [ 
+    'get'
+  ]
+}
+
+/* Grant VM Access to KeyVault */
+module keyVaultAccess '../modules/keyvaultpolicy.bicep' = if (grantKeyVaultAccess) {
+  scope: resourceGroup('gms-key-vault-rg')
+  dependsOn: [
+    vm
+  ]
+  name: 'KeyVaultAccess-${vmName}'
+  params: {
+    keyVaultName: 'keyvault-gms'
+    principalId: vm.identity.principalId
+    keyVaultPermissions: keyVaultPermissions
+    policyAction: 'add'
+  }
+}
+
 /* Add custom script extension */
 
 resource customscript 'Microsoft.Compute/virtualMachines/extensions@2021-03-01' = if (applyScriptExtension) {
@@ -198,6 +221,7 @@ resource customscript 'Microsoft.Compute/virtualMachines/extensions@2021-03-01' 
   }
   dependsOn: [
     vm
+    keyVaultAccess
   ]
 }
 
