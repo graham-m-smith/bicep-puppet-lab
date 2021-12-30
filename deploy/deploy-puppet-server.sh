@@ -11,7 +11,18 @@ ACCESS_TOKEN=$(/bin/curl -s ${ACCESS_TOKEN_URI} -H $HEADER | /bin/python -c "imp
 # Set Authorization Header
 HEADER="Authorization: Bearer $ACCESS_TOKEN"
 
-# Create directory for keys
+# Get TailScale Auth Key
+URI='https://keyvault-gms.vault.azure.net/secrets/TailscaleAuthKey?api-version=2016-10-01'
+AUTH_KEY=$(/bin/curl -s $URI -H "$HEADER" | /bin/python -c "import sys, json; print json.load(sys.stdin)['value']")
+
+# Install TailScale
+/bin/yum-config-manager --add-repo https://pkgs.tailscale.com/stable/centos/7/tailscale.repo >> /tmp/puppet_server_config.log 2>&1
+/bin/yum install tailscale -y >> /tmp/puppet_server_config.log 2>&1
+/bin/systemctl enable --now tailscaled >> /tmp/puppet_server_config.log 2>&1
+/bin/tailscale up --authkey $AUTH_KEY >> /tmp/puppet_server_config.log 2>&1
+/bin/tailscale ip -4 >> /tmp/puppet_server_config.log 2>&1
+
+# Create directory for GitHub and EYAML keys
 KEYS_DIR="/root/keys"
 /bin/mkdir ${KEYS_DIR}
 

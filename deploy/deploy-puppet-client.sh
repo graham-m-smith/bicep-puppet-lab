@@ -24,17 +24,12 @@ AUTH_KEY=$(/bin/curl -s $URI -H "$HEADER" | /bin/python -c "import sys, json; pr
 /bin/tailscale up --authkey $AUTH_KEY >> /tmp/puppet_client_install.log 2>&1
 /bin/tailscale ip -4 >> /tmp/puppet_client_install.log 2>&1
 
+# Install Puppet Agent
+/bin/yum install -y http://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm
+/bin/yum install puppet-agent -y
 
-
-#yum install -y http://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm
-#yum install -y puppet-agent
-
-#cat >> /etc/puppetlabs/puppet/puppet.conf << EOF
-#server = puppetserver.gmslab.local
-#certname = ${HOSTNAME}.gmslab.local
-#environment = production
-#EOF
-
-#systemctl enable puppet
-#systemctl start puppet
-#systemctl status puppet
+/bin/cat >> /etc/puppetlabs/puppet/puppet.conf << EOF
+server = puppet.gmslab.local
+certname = ${HOSTNAME}
+environment = production
+EOF
