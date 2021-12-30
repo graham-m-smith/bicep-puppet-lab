@@ -123,3 +123,20 @@ EOF
 
 # Deploy Puppet configuration from control repo
 /opt/puppetlabs/puppet/bin/r10k deploy environment -v debug --modules  >> /tmp/puppet_server_config.log 2>&1
+
+# Install ENC
+/opt/puppetlabs/bin/puppet apply -e "class { 'enc': }" >> /tmp/puppet_server_config.log 2>&1
+
+# Sync to ENC database
+/usr/local/bin/puppetconfig --debug --verbose sync >> /tmp/puppet_server_config.log 2>&1
+
+# Generate facts.yaml file
+/usr/local/bin/puppetconfig --debug --verbose generate >> /tmp/puppet_server_config.log 2>&1
+
+# Run Puppet agent to install PuppetDB
+/opt/puppetlabs/bin/puppet agent -t >> /tmp/puppet_server_config.log 2>&1
+
+# Enable puppet agent service
+/bin/systemctl enable puppet >> /tmp/puppet_server_config.log 2>&1
+/bin/systemctl start puppet >> /tmp/puppet_server_config.log 2>&1
+
