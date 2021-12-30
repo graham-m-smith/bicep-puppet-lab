@@ -109,7 +109,7 @@ var linuxVMList = [
     extensionScriptName: 'configure-puppet-client'
     fileUri: 'https://raw.githubusercontent.com/graham-m-smith/bicep-puppet-lab/master/deploy/deploy-puppet-client.sh'
     commandToExecute: 'sh deploy-puppet-client.sh'
-    grantKeyVaultAccess: false
+    grantKeyVaultAccess: true
     identityType: 'SystemAssigned'
   }
   {
