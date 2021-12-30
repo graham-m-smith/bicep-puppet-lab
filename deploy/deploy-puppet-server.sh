@@ -39,14 +39,14 @@ OUTPUT="${KEYS_DIR}/id_github.pub"
 /bin/chmod -R 700 ${KEYS_DIR}
 
 # Install Git
-yum install -y git > /tmp/puppet_server_config.log 2>&1
+/bin/yum install -y git > /tmp/puppet_server_config.log 2>&1
 
 # Install Puppet Server
-yum install -y  http://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm >> /tmp/puppet_server_config.log 2>&1
-yum install -y puppetserver >> /tmp/puppet_server_config.log 2>&1
+/bin/yum install -y  http://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm >> /tmp/puppet_server_config.log 2>&1
+/bin/yum install -y puppetserver >> /tmp/puppet_server_config.log 2>&1
 
 # puppet.conf file
-cat >> /etc/puppetlabs/puppet/puppet.conf <<EOF
+/bin/cat >> /etc/puppetlabs/puppet/puppet.conf <<EOF
 server = puppet.gmslab.local
 certname = puppet.gmslab.local
 [agent]
@@ -59,15 +59,15 @@ EOF
 /opt/puppetlabs/bin/puppetserver ca setup >> /tmp/puppet_server_config.log 2>&1
 
 # Start Puppet
-systemctl enable puppetserver >> /tmp/puppet_server_config.log 2>&1
-systemctl start puppetserver >> /tmp/puppet_server_config.log 2>&1
+/bin/systemctl enable puppetserver >> /tmp/puppet_server_config.log 2>&1
+/bin/systemctl start puppetserver >> /tmp/puppet_server_config.log 2>&1
 
 # Puppet DB CLI
 /opt/puppetlabs/puppet/bin/gem install --bindir /opt/puppetlabs/bin puppetdb_cli RU>> /tmp/puppet_server_config.log 2>&1
 
 # CLI Config File
-mkdir -p $HOME/.puppetlabs/client-tools >> /tmp/puppet_server_config.log 2>&1
-cat > $HOME/.puppetlabs/client-tools/puppetdb.conf <<EOF
+/bin/mkdir -p $HOME/.puppetlabs/client-tools >> /tmp/puppet_server_config.log 2>&1
+/bin/cat > $HOME/.puppetlabs/client-tools/puppetdb.conf <<EOF
 {
   "puppetdb": {
     "server_urls": "https://puppet.gmslab.local:8081",
@@ -80,23 +80,23 @@ EOF
 
 # Install EYAML
 /opt/puppetlabs/bin/puppetserver gem install hiera-eyaml >> /tmp/puppet_server_config.log 2>&1
-mkdir /etc/eyaml >> /tmp/puppet_server_config.log 2>&1
-cat > /etc/eyaml/config.yaml <<EOF
+/bin/mkdir /etc/eyaml >> /tmp/puppet_server_config.log 2>&1
+/bin/cat > /etc/eyaml/config.yaml <<EOF
 ---
 pkcs7_private_key: '/etc/puppetlabs/puppet/eyaml/private_key.pkcs7.pem'
 pkcs7_public_key: '/etc/puppetlabs/puppet/eyaml/public_key.pkcs7.pem'
 EOF
 
-mkdir /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
-cp /root/keys/*_key.pkcs7.pem /etc/puppetlabs/puppet/eyaml/ >> /tmp/puppet_server_config.log 2>&1
-chown -R puppet:puppet /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
-chmod -R 0500 /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
-chmod 0400 /etc/puppetlabs/puppet/eyaml/*.pem >> /tmp/puppet_server_config.log 2>&1
+/bin/mkdir /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
+/bin/cp /root/keys/*_key.pkcs7.pem /etc/puppetlabs/puppet/eyaml/ >> /tmp/puppet_server_config.log 2>&1
+/bin/chown -R puppet:puppet /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
+/bin/chmod -R 0500 /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
+/bin/chmod 0400 /etc/puppetlabs/puppet/eyaml/*.pem >> /tmp/puppet_server_config.log 2>&1
 
 # Install R10K
 /opt/puppetlabs/puppet/bin/gem install r10k >> /tmp/puppet_server_config.log 2>&1
-mkdir -p /etc/puppetlabs/r10k >> /tmp/puppet_server_config.log 2>&1
-cat > /etc/puppetlabs/r10k/r10k.yaml <<EOF
+/bin/mkdir -p /etc/puppetlabs/r10k >> /tmp/puppet_server_config.log 2>&1
+/bin/cat > /etc/puppetlabs/r10k/r10k.yaml <<EOF
 # The location to use for storing cached Git repos
 :cachedir: '/var/cache/r10k'
 
@@ -110,14 +110,14 @@ cat > /etc/puppetlabs/r10k/r10k.yaml <<EOF
 EOF
 
 # SSH Github config
-cat >> $HOME/.ssh/config <<EOF
+/bin/cat >> /root/.ssh/config <<EOF
 Host github.com
         Hostname github.com
         IdentityFile /root/keys/id_github
 EOF
 
 # github.com host key
-cat >> $HOME/.ssh/known_hosts <<EOF
+/bin/cat >> /root/.ssh/known_hosts <<EOF
 github.com,140.82.121.3 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
 EOF
 
