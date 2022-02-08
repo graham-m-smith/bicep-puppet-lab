@@ -1,7 +1,7 @@
 # Deploy puppet server
 HOSTNAME=$(/bin/hostname)
 hostnamectl set-hostname ${HOSTNAME}.gmslab.local
-
+exit
 # Get Access Token for Key Vault Access
 export PYTHONIOENCODING=utf8
 ACCESS_TOKEN_URI='http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net'
