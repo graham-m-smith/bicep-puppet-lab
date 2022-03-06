@@ -1,6 +1,6 @@
 /* Parameters */
 
-param project string = 'puppet4'
+param project string = 'puppetlab'
 param dnsZoneName string = 'gmslab.local'
 param location string = resourceGroup().location
 
@@ -63,7 +63,7 @@ var dnsCNAMEList = [
   {
     dnszone: dnsZoneName
     cname: 'puppet'
-    target: 'puppet4server.${dnsZoneName}'
+    target: 'puppetlabserver.${dnsZoneName}'
     ttl: 5
   }
 ]
@@ -71,8 +71,8 @@ var dnsCNAMEList = [
 /* Define array containing list of Linux Virtual machines to be created */
 var linuxVMList = [
   {
-    vmname: 'puppet4server'
-    vmSize: 'Standard_DS2_v2'
+    vmname: 'puppetlabserver'
+    vmSize: 'Standard_D2ds_v5'
     spPublisher: 'OpenLogic'
     spOffer: 'CentOS-LVM'
     spSku: '7-lvm-gen2'
@@ -92,8 +92,8 @@ var linuxVMList = [
     identityType: 'SystemAssigned'
   }
   {
-    vmname: 'puppet4client1'
-    vmSize: 'Standard_DS2_v2'
+    vmname: 'puppetlabclient1'
+    vmSize: 'Standard_D2ds_v5'
     spPublisher: 'OpenLogic'
     spOffer: 'CentOS-LVM'
     spSku: '7-lvm-gen2'
@@ -113,8 +113,8 @@ var linuxVMList = [
     identityType: 'SystemAssigned'
   }
   {
-    vmname: 'puppet4client2'
-    vmSize: 'Standard_DS2_v2'
+    vmname: 'puppetlabclient2'
+    vmSize: 'Standard_D2ds_v5'
     spPublisher: 'OpenLogic'
     spOffer: 'CentOS-LVM'
     spSku: '7-lvm-gen2'

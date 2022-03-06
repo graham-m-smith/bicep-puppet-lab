@@ -105,6 +105,10 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
         osType: 'Linux'
         name: osdiskName
         createOption: 'FromImage'
+        deleteOption: 'Delete'
+        managedDisk: {
+          storageAccountType: 'StandardSSD_LRS'
+        }
         caching: 'ReadWrite'
         writeAcceleratorEnabled: false
       }
