@@ -132,6 +132,8 @@ EOF
 github.com,140.82.121.3 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
 EOF
 
+exit 0
+
 # Deploy Puppet configuration from control repo
 /opt/puppetlabs/puppet/bin/r10k deploy environment -v debug --modules  >> /tmp/puppet_server_config.log 2>&1
 
