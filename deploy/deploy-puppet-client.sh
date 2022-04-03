@@ -4,8 +4,6 @@ echo "" > /tmp/puppet_client_install.log
 HOSTNAME=$(/bin/hostname)
 hostnamectl set-hostname ${HOSTNAME}.gmslab.local >> /tmp/puppet_client_install.log 2>&1
 
-exit 0
-
 # Get Access Token for Key Vault Access
 export PYTHONIOENCODING=utf8
 ACCESS_TOKEN_URI='http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net'
