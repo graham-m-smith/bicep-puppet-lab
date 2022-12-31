@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "project": {
+            "value": "puppetlab5"
+        },
+        "rules_list": {
+            "value": [
+                {
+                    "asgname": "asg-ssh-inbound",
+                    "priority": 100,
+                    "description": "ssh-inbound",
+                    "direction": "Inbound",
+                    "access": "Allow",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "22"
+                },
+                {
+                    "asgname": "asg-rdp-inbound",
+                    "priority": 110,
+                    "description": "rdp-inbound",
+                    "direction": "Inbound",
+                    "access": "Allow",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "3389" 
+                }
+            ]
+        },
+        "sourceAddressPrefixes": {
+            "value": "86.22.9.178"
+        },
+        "tag_values": {
+            "value": {
+                "Department": "Infrastructure",
+                "Business_Unit": "DTS",
+                "Environment": "DEV",
+                "DeployMethod": "Bicep",
+                "Project": "Puppet-ENC"
+            }
+        }
+    }
+}

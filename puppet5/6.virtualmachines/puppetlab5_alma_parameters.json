@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "project": {
+            "value": "puppetlab5"
+        },
+        "keyvaultRgName": {
+            "value": "gms-key-vault-rg"
+        },
+        "keyvaultName": {
+            "value": "keyvault-gms"
+        },
+        "vmName": {
+            "value": "puppetlab5alma"
+        },
+        "vmSize": {
+            "value": "Standard_D2ds_v5"
+        },
+        "spPublisher": {
+            "value": "procomputers"
+        },
+        "spOffer": {
+            "value": "almalinux-9-latest"
+        },
+        "spSku": {
+            "value": "almalinux-9-latest"
+        },
+        "spVersion": {
+            "value": "latest"
+        },
+        "planName": {
+            "value": "almalinux-9-latest"
+        },
+        "planProduct": {
+            "value": "almalinux-9-latest"
+        },
+        "planPublisher": {
+            "value": "procomputers"
+        },
+        "privateIpAddress": {
+            "value": "10.128.2.40"
+        },
+        "asglist": {
+            "value": [ "asg-ssh-inbound" ]
+        },
+        "autoShutdown": {
+            "value": "Enabled"
+        },
+        "autoShutdownTime": {
+            "value": "2100"
+        },
+        "manageddisks": {
+            "value": []
+        },
+        "applyScriptExtension": {
+            "value": false
+        },
+        "extensionScriptName": {
+            "value": ""
+        },
+        "fileUri": {
+            "value": ""
+        },
+        "commandToExecute": {
+            "value": ""
+        },
+        "grantKeyVaultAccess": {
+            "value": true
+        },
+        "identityType": {
+            "value": "SystemAssigned"
+        },
+        "tag_values": {
+            "value": {
+                "Department": "Infrastructure",
+                "Business_Unit": "DTS",
+                "Environment": "DEV",
+                "DeployMethod": "Bicep",
+                "Project": "Puppet-ENC"
+            }
+        }
+    }
+}

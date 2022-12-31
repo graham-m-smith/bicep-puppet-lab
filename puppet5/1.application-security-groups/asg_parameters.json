@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "asg_list": {
+            "value": [  "asg-ssh-inbound", 
+                        "asg-rdp-inbound"
+                    ]
+        },
+        "tag_values": {
+            "value": {
+                "Department": "Infrastructure",
+                "Business_Unit": "DTS",
+                "Environment": "DEV",
+                "DeployMethod": "Bicep",
+                "Project": "Puppet-ENC"
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "project": {
+            "value": "puppetlab5"
+        },
+        "dnsZoneName": {
+            "value": "gmslab5.local"
+        },
+        "dnsCNAMEList": {
+            "value": [
+                {
+                    "cname": "puppet",
+                    "target": "puppetlabserver5",
+                    "ttl": 5
+                                   
+                }
+            ]
+        },
+        "tag_values": {
+            "value": {
+                "Department": "Infrastructure",
+                "Business_Unit": "DTS",
+                "Environment": "DEV",
+                "DeployMethod": "Bicep",
+                "Project": "Puppet-ENC"
+            }
+        }
+    }
+}

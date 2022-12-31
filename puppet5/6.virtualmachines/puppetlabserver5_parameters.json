@@ -1,0 +1,75 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "project": {
+            "value": "puppetlab5"
+        },
+        "keyvaultRgName": {
+            "value": "gms-key-vault-rg"
+        },
+        "keyvaultName": {
+            "value": "keyvault-gms"
+        },
+        "vmName": {
+            "value": "puppetlabserver5"
+        },
+        "vmSize": {
+            "value": "Standard_D2ds_v5"
+        },
+        "spPublisher": {
+            "value": "OpenLogic"
+        },
+        "spOffer": {
+            "value": "CentOS-LVM"
+        },
+        "spSku": {
+            "value": "7-lvm-gen2"
+        },
+        "spVersion": {
+            "value": "latest"
+        },
+        "privateIpAddress": {
+            "value": "10.128.2.10"
+        },
+        "asglist": {
+            "value": [ "asg-ssh-inbound" ]
+        },
+        "autoShutdown": {
+            "value": "Enabled"
+        },
+        "autoShutdownTime": {
+            "value": "2100"
+        },
+        "manageddisks": {
+            "value": []
+        },
+        "applyScriptExtension": {
+            "value": false
+        },
+        "extensionScriptName": {
+            "value": ""
+        },
+        "fileUri": {
+            "value": ""
+        },
+        "commandToExecute": {
+            "value": ""
+        },
+        "grantKeyVaultAccess": {
+            "value": true
+        },
+        "identityType": {
+            "value": "SystemAssigned"
+        },
+        "tag_values": {
+            "value": {
+                "Department": "Infrastructure",
+                "Business_Unit": "DTS",
+                "Environment": "DEV",
+                "DeployMethod": "Bicep",
+                "Project": "Puppet-ENC"
+            }
+        }
+    }
+}

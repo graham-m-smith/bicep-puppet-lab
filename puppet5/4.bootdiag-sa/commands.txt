@@ -1,0 +1,2 @@
+
+az deployment group create --resource-group rg-puppetlab5 --template-file bootdiagsa.bicep --parameters @bootdiagsa_parameters.json
