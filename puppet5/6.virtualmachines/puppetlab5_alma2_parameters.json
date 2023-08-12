@@ -12,28 +12,37 @@
             "value": "keyvault-gms"
         },
         "vmName": {
-            "value": "puppetlabserver5"
+            "value": "puppetlab5alma2"
         },
         "vmSize": {
             "value": "Standard_D2ds_v5"
         },
         "spPublisher": {
-            "value": "OpenLogic"
+            "value": "procomputers"
         },
         "spOffer": {
-            "value": "CentOS-LVM"
+            "value": "almalinux-9-latest"
         },
         "spSku": {
-            "value": "7-lvm-gen2"
+            "value": "almalinux-9-latest"
         },
         "spVersion": {
             "value": "latest"
         },
+        "planName": {
+            "value": "almalinux-9-latest"
+        },
+        "planProduct": {
+            "value": "almalinux-9-latest"
+        },
+        "planPublisher": {
+            "value": "procomputers"
+        },
         "privateIpAddress": {
-            "value": "10.128.2.10"
+            "value": "10.128.2.50"
         },
         "asglist": {
-            "value": [ "asg-ssh-inbound", "asg-mysql-inbound", "asg-encui-inbound", "asg-encapi-inbound", "asg-puppetdb-inbound", "asg-puppetapi-inbound" ]
+            "value": [ "asg-ssh-inbound" ]
         },
         "autoShutdown": {
             "value": "Enabled"

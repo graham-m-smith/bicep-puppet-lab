@@ -26,11 +26,61 @@
                     "protocol": "Tcp",
                     "sourcePortRange": "*",
                     "destinationPortRange": "3389" 
+                },
+                {
+                    "asgname": "asg-mysql-inbound",
+                    "priority": 120,
+                    "description": "mysql-inbound",
+                    "direction": "Inbound",
+                    "access": "Allow",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "3306" 
+                },
+                {
+                    "asgname": "asg-encui-inbound",
+                    "priority": 130,
+                    "description": "encui-inbound",
+                    "direction": "Inbound",
+                    "access": "Allow",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "443" 
+                },
+                {
+                    "asgname": "asg-encapi-inbound",
+                    "priority": 140,
+                    "description": "encapi-inbound",
+                    "direction": "Inbound",
+                    "access": "Allow",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "9443" 
+                },
+                {
+                    "asgname": "asg-puppetdb-inbound",
+                    "priority": 150,
+                    "description": "puppetdb-inbound",
+                    "direction": "Inbound",
+                    "access": "Allow",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "8081" 
+                },
+                {
+                    "asgname": "asg-puppetapi-inbound",
+                    "priority": 160,
+                    "description": "puppetapi-inbound",
+                    "direction": "Inbound",
+                    "access": "Allow",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "8140" 
                 }
             ]
         },
         "sourceAddressPrefixes": {
-            "value": "86.22.9.178"
+            "value": "86.176.139.142"
         },
         "tag_values": {
             "value": {

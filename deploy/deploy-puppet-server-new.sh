@@ -1,6 +1,8 @@
 # Deploy puppet server
 HOSTNAME=$(/bin/hostname)
-hostnamectl set-hostname ${HOSTNAME}.gmslab5.local
+DOMAIN="gmslab5.local"
+FQDN="${HOSTNAME}.${DOMAIN}"
+hostnamectl set-hostname $FQDN
 
 # Get Access Token for Key Vault Access
 export PYTHONIOENCODING=utf8
@@ -16,11 +18,11 @@ URI='https://keyvault-gms.vault.azure.net/secrets/TailscaleAuthKey?api-version=2
 AUTH_KEY=$(/bin/curl -s $URI -H "$HEADER" | /bin/python -c "import sys, json; print json.load(sys.stdin)['value']")
 
 # Install TailScale
-/bin/yum-config-manager --add-repo https://pkgs.tailscale.com/stable/centos/7/tailscale.repo >> /tmp/puppet_server_config.log 2>&1
-/bin/yum install tailscale -y >> /tmp/puppet_server_config.log 2>&1
-/bin/systemctl enable --now tailscaled >> /tmp/puppet_server_config.log 2>&1
-/bin/tailscale up --authkey $AUTH_KEY >> /tmp/puppet_server_config.log 2>&1
-/bin/tailscale ip -4 >> /tmp/puppet_server_config.log 2>&1
+/bin/yum-config-manager --add-repo https://pkgs.tailscale.com/stable/centos/7/tailscale.repo
+/bin/yum install tailscale -y
+/bin/systemctl enable --now tailscaled
+/bin/tailscale up --authkey $AUTH_KEY
+/bin/tailscale ip -4
 
 # Create directory for GitHub and EYAML keys
 KEYS_DIR="/root/keys"
@@ -50,34 +52,38 @@ OUTPUT="${KEYS_DIR}/id_github.pub"
 /bin/chmod -R 700 ${KEYS_DIR}
 
 # Install Git
-/bin/yum install -y git > /tmp/puppet_server_config.log 2>&1
+/bin/yum install -y git
+
+# Install Docker
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Install Puppet Server
-/bin/yum install -y  http://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm >> /tmp/puppet_server_config.log 2>&1
-/bin/yum install -y puppetserver >> /tmp/puppet_server_config.log 2>&1
+/bin/yum install -y  http://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm
+/bin/yum install -y puppetserver
 
 # puppet.conf file
 /bin/cat >> /etc/puppetlabs/puppet/puppet.conf <<EOF
-server = puppet.gmslab.local
-certname = puppet.gmslab.local
+server = puppet.gmslab5.local
+certname = puppet.gmslab5.local
 [agent]
-server = puppet.gmslab.local
-certname = puppet.gmslab.local
+server = puppet.gmslab5.local
+certname = puppet.gmslab5.local
 environment = production
 EOF
 
 # Set-up CA
-/opt/puppetlabs/bin/puppetserver ca setup >> /tmp/puppet_server_config.log 2>&1
+/opt/puppetlabs/bin/puppetserver ca setup
 
 # Start Puppet
-/bin/systemctl enable puppetserver >> /tmp/puppet_server_config.log 2>&1
-/bin/systemctl start puppetserver >> /tmp/puppet_server_config.log 2>&1
+/bin/systemctl enable puppetserver
+/bin/systemctl start puppetserver
 
 # Puppet DB CLI
-/opt/puppetlabs/puppet/bin/gem install --bindir /opt/puppetlabs/bin puppetdb_cli >> /tmp/puppet_server_config.log 2>&1
+/opt/puppetlabs/puppet/bin/gem install --bindir /opt/puppetlabs/bin puppetdb_cli
 
 # CLI Config File
-/bin/mkdir -p $HOME/.puppetlabs/client-tools >> /tmp/puppet_server_config.log 2>&1
+/bin/mkdir -p $HOME/.puppetlabs/client-tools
 /bin/cat > $HOME/.puppetlabs/client-tools/puppetdb.conf <<EOF
 {
   "puppetdb": {
@@ -90,23 +96,23 @@ EOF
 EOF
 
 # Install EYAML
-/opt/puppetlabs/bin/puppetserver gem install hiera-eyaml >> /tmp/puppet_server_config.log 2>&1
-/bin/mkdir /etc/eyaml >> /tmp/puppet_server_config.log 2>&1
+/opt/puppetlabs/bin/puppetserver gem install hiera-eyaml
+/bin/mkdir /etc/eyaml
 /bin/cat > /etc/eyaml/config.yaml <<EOF
 ---
 pkcs7_private_key: '/etc/puppetlabs/puppet/eyaml/private_key.pkcs7.pem'
 pkcs7_public_key: '/etc/puppetlabs/puppet/eyaml/public_key.pkcs7.pem'
 EOF
 
-/bin/mkdir /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
-/bin/cp /root/keys/*_key.pkcs7.pem /etc/puppetlabs/puppet/eyaml/ >> /tmp/puppet_server_config.log 2>&1
-/bin/chown -R puppet:puppet /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
-/bin/chmod -R 0500 /etc/puppetlabs/puppet/eyaml >> /tmp/puppet_server_config.log 2>&1
-/bin/chmod 0400 /etc/puppetlabs/puppet/eyaml/*.pem >> /tmp/puppet_server_config.log 2>&1
+/bin/mkdir /etc/puppetlabs/puppet/eyaml
+/bin/cp /root/keys/*_key.pkcs7.pem /etc/puppetlabs/puppet/eyaml/
+/bin/chown -R puppet:puppet /etc/puppetlabs/puppet/eyaml
+/bin/chmod -R 0500 /etc/puppetlabs/puppet/eyaml
+/bin/chmod 0400 /etc/puppetlabs/puppet/eyaml/*.pem
 
 # Install R10K
-/opt/puppetlabs/puppet/bin/gem install r10k >> /tmp/puppet_server_config.log 2>&1
-/bin/mkdir -p /etc/puppetlabs/r10k >> /tmp/puppet_server_config.log 2>&1
+/opt/puppetlabs/puppet/bin/gem install r10k
+/bin/mkdir -p /etc/puppetlabs/r10k
 /bin/cat > /etc/puppetlabs/r10k/r10k.yaml <<EOF
 # The location to use for storing cached Git repos
 :cachedir: '/var/cache/r10k'
@@ -132,24 +138,35 @@ EOF
 github.com,140.82.121.3 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
 EOF
 
-exit 0
+# Puppet facts
+mkdir -p /opt/gms-puppet/puppet-facts
+/bin/cat > /opt/gms-puppet/puppet-facts/puppet.gmslab5.local.yaml <<EOF
+server::facts:
+  puppet_gmslab5_local:
+    testfact1: testvalue2
+EOF
+chown -R puppet:puppet /opt/gms-puppet
 
 # Deploy Puppet configuration from control repo
-/opt/puppetlabs/puppet/bin/r10k deploy environment -v debug --modules  >> /tmp/puppet_server_config.log 2>&1
+/opt/puppetlabs/puppet/bin/r10k deploy environment -v debug --modules
 
 # Install ENC
-/opt/puppetlabs/bin/puppet apply -e "class { 'enc': }" >> /tmp/puppet_server_config.log 2>&1
+# /opt/puppetlabs/bin/puppet apply -e "class { 'enc': }"
 
 # Sync to ENC database
-/usr/local/bin/puppetconfig --debug --verbose sync >> /tmp/puppet_server_config.log 2>&1
+# /usr/local/bin/puppetconfig --debug --verbose sync
 
 # Generate facts.yaml file
-/usr/local/bin/puppetconfig --debug --verbose generate >> /tmp/puppet_server_config.log 2>&1
+# /usr/local/bin/puppetconfig --debug --verbose generate
 
 # Run Puppet agent to install PuppetDB
-/opt/puppetlabs/bin/puppet agent -t >> /tmp/puppet_server_config.log 2>&1
+# /opt/puppetlabs/bin/puppet agent -t
 
 # Enable puppet agent service
-/bin/systemctl enable puppet >> /tmp/puppet_server_config.log 2>&1
-/bin/systemctl start puppet >> /tmp/puppet_server_config.log 2>&1
+# /bin/systemctl enable puppet
+# /bin/systemctl start puppet
 
+# store reports in puppetdb
+/bin/cat >> /etc/puppetlabs/puppet/puppet.conf <<EOF
+reports = store,puppetdb
+EOF

@@ -2,3 +2,5 @@
 az deployment group create --resource-group rg-puppetlab5 --template-file puppetlabserver5.bicep --parameters @puppetlabserver5_parameters.json
 
 az deployment group create --resource-group rg-puppetlab5 --template-file puppetlab5_alma.bicep --parameters @puppetlab5_alma_parameters.json
+
+az deployment group create --resource-group rg-puppetlab5 --template-file puppetlab5_alma.bicep --parameters @puppetlab5_alma2_parameters.json
